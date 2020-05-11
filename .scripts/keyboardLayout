@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Retrieve the current keyboard layout in a way that is easily parsable
+layout=$(setxkbmap -query | grep layout | awk '{print $2}')
+
+# Detect the current layout
+case $layout in
+	("us") setxkbmap pt
+		echo pt > $HOME/.config/keyboard/layout
+		;;
+	("pt") setxkbmap us
+		echo us > $HOME/.config/keyboard/layout
+		;; 
+esac
+
+

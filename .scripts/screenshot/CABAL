@@ -1,0 +1,17 @@
+#!/bin/bash
+
+ActiveWindow=$(xdotool getwindowfocus getwindowname)
+
+path='~/CABALNew/ScreenShot/'$(date +"%d-%m-%Y")
+
+#if [[ $ActiveWindow = "CABAL" ]]; then
+	#Test if the directory exists, if not, create it.
+	#[[ -d ${path} ]] || mkdir ${path}/${date +"%d-%m-%Y"}
+	mkdir ~/CABALNew/ScreenShot/$(date +"%d-%m-%Y")	
+	
+	scrot -u -q 100 CABAL_%d-%m-%Y_%T.jpg -e 'mv $f ~/CABALNew/ScreenShot/%d-%m-%Y'
+	
+	transset-df 1 -n "Dunst" && dunstify -i ~/cabal.png -u normal \
+		"Screenshot image has been saved in" "${path}/"CABAL_$(date +%d-%m-%Y_%T).jpg""
+#fi
+

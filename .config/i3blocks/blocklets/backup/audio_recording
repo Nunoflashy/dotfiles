@@ -1,0 +1,37 @@
+#!/bin/sh
+
+VAR="/tmp/recording-audio.rec"
+RECORDING="$(cat $VAR)"
+
+function setup {
+	touch $VAR
+	echo 1 > $VAR
+	
+}
+
+function notify {
+	if [[ -f "/usr/bin/dunstify" ]]; then
+		dunstify -u normal "⏺ Recording has started..."
+	fi
+}
+
+function displayAudioInfo {
+	if [[ "$RECORDING" = 0 ]]; then
+		echo "⏺ AUDIO" && notify
+	fi
+}
+
+
+# Toggle the variable so the state changes each time this is executed
+# If it's on, it will be off on the next execution, and vice versa.
+function toggle {
+	if [[ $RECORDING = 0 ]]; then
+		echo 1 > $VAR
+	else
+		echo 0 > $VAR
+	fi
+}
+
+[[ ! -f $VAR ]] && setup
+toggle
+displayAudioInfo

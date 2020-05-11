@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Exit if deadbeef is not running
+[[ -z "$(pidof deadbeef)" ]] && exit 33;
+
+# Check if the music is not playing and not paused, in other words
+# check if it's stopped entirely
+[[ -z "$(deadbeef --nowplaying-tf "%isplaying%")" ]] && \
+[[ ! "$(deadbeef --nowplaying-tf "%ispaused%")" ]] && exit 33;
+
+
+metadata="$(deadbeef --nowplaying-tf "%album% - %title%")"
+
+# if the current song doesn't have an album
+if [[ -z "$(deadbeef --nowplaying-tf "%album%")" ]]; then
+	
+	#if it doesn't have an artist either
+	if [[ -z "$(deadbeef --nowplaying-tf "%artist%")" ]]; then
+		metadata="$(deadbeef --nowplaying-tf "%title%")"
+	else
+		metadata="$(deadbeef --nowplaying-tf "%artist% - %title%")"
+	fi
+	
+fi
+
+echo "$metadata"
+
+
+case $BLOCK_BUTTON in
+	4) deadbeef --next;; # Scroll Up
+	5) deadbeef --prev;; # Scroll Down
+esac

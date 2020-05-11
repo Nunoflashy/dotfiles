@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Prints the status of the ethernet adapter, either UP or DOWN
+command=$(ip link | grep enp2s0 | awk '{print $9}')
+
+if [[ "$command" = "UP" ]]; then
+	echo $command # full text
+	echo $command # short text
+	echo \#42F465  # color
+	exit 0
+else
+	echo "$command"
+	echo "$command"
+	echo \#FF4747  # color
+fi
+
+

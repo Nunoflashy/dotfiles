@@ -1,0 +1,27 @@
+#!/bin/bash
+
+ETH_INTERFACE="enp0s3"
+
+# Prints the status of the ethernet adapter, either UP or DOWN
+command=$(ip link | grep $ETH_INTERFACE | awk '{print $9}')
+
+case $BLOCK_BUTTON in
+	1)
+		
+		[[ "$command" = "UP" ]]   && "$(gksu ip link set $ETH_INTERFACE down)" && dunstify -u critical "Network Down" || \
+		[[ "$command" = "DOWN" ]] && "$(gksu ip link set $ETH_INTERFACE  up)";;
+esac
+
+if [[ "$command" = "UP" ]]; then
+	echo $command # full text
+	echo $command # short text
+	echo \#42F465  # color
+	exit 0
+else
+	echo "$command"
+	echo "$command"
+	echo \#FF4747  # color
+	exit 0
+fi
+
+

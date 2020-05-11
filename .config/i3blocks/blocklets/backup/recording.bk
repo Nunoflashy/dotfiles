@@ -1,0 +1,30 @@
+#!/bin/bash
+
+VAR="$SCRIPTS/recording/.rec"
+RECORDING="$(cat $VAR)"
+
+function setup {
+	touch $VAR
+	echo 1 > $VAR
+}
+
+# Toggle the variable so the state changes each time this is executed
+# If it's on, it will be off on the next execution, and vice versa.
+function toggle {
+	if [[ $RECORDING = 0 ]]; then
+		echo 1 > $VAR
+	elif [[ $RECORDING = 1 ]]; then
+		echo 0 > $VAR
+	fi
+}
+
+if [[ ! -f $VAR ]]; then
+	setup
+fi
+
+toggle
+
+if [[ "$RECORDING" = 0 ]]; then
+	# Recording should begin here
+	printf "⏺ REC"
+fi

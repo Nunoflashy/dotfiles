@@ -1,0 +1,46 @@
+#!/bin/sh
+
+RAM=8
+RAM_USED="$(free --si -h | grep Mem: | awk '{print $3}')"
+
+echo "$RAM_USED"
+echo "$RAM_USED"
+
+if [[ $RAM_USED != *M* ]]; then
+	#			  	  RAM	>	7
+	if (( $(echo "$RAM_USED > $RAM-1" | bc -l) )); then
+		echo \#f44242 # RED
+	fi
+
+	#			  	  RAM	>	5.3
+	if (( $(echo "$RAM_USED > $RAM/1.5" | bc -l) )); then
+		echo \#ff8800 # ORANGE
+	fi
+
+	#			  	  RAM	>	2.6
+	if (( $(echo "$RAM_USED > $RAM/3" | bc -l) )); then
+		echo \#ffff00 # YELLOW
+	fi
+
+	#			  	  RAM	>	1
+	if (( $(echo "$RAM_USED > $RAM/RAM" | bc -l) )); then
+	
+		echo \#42F465 # GREEN
+	fi
+else
+	# Parse Megabytes
+	#			  	  RAM	>	800M
+	if (( $(echo "$RAM_USED > 800" | bc -l) )); then
+		echo \#007BFF # SOFT BLUE
+	fi
+	#			  	  RAM	>	100M
+	if (( $(echo "$RAM_USED > 100" | bc -l) )); then
+		echo \#1111ff # DEEP DARK BLUE
+	fi
+fi
+
+
+
+
+
+

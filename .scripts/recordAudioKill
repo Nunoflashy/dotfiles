@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Terminate the recording
+pkill -P -SIGINT $(pgrep -x record)
+#pkill -SIGINT ffmpeg
+
+echo "" > /tmp/video-recording.record && pkill -RTMIN+2 i3blocks

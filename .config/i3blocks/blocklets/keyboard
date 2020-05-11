@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#layout=$(setxkbmap -query | grep layout | awk '{print $2}')
+layout=$(xset -q | grep -A 0 'LED' | cut -c63-67)
+
+# Change the actual layout, this script can be found in the ~/.scripts directory.
+case $layout in
+	("1000") echo "ENG"
+	;;
+	("0000") echo "PT"
+	;;
+esac

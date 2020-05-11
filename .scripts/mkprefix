@@ -1,0 +1,74 @@
+#!/bin/bash
+# $1 arch
+# $2 prefix
+
+if [ $# -eq 0 ]; then
+	echo "Usage: $0 <arch> <prefix>"
+	exit 1
+fi
+
+RAND=$(( ( RANDOM % 2 ) + 1 ))
+
+ARCH=${1}
+PREFIX=${2}
+
+if [[ $ARCH == 32 || $ARCH == 64 ]]; then
+	ARCH="win$ARCH"
+
+       	case $ARCH in
+       		[32]*) printf "You have specified a 32 bit wine prefix\n"; break;; 
+       		[64]*) printf "You have specified a 64 bit wine prefix\n"; break;;
+	esac
+else
+	echo "Error: Invalid architecture: ${ARCH}."
+
+	case ${RAND} in
+		[1]) ARCH=32; PREFIX="programs";;
+		[2]) ARCH=64; PREFIX="games";;
+	esac
+	
+	
+	printf "Possibilities are 32 and 64 bits. (E.g: ${0} ${ARCH} ${PREFIX})\n"
+	exit 1;
+fi
+
+WINEPREFIX=$HOME/.wineprefix/$PREFIX
+
+RED='\033[1;31m'
+CYAN='\033[1;36m'
+GREEN='\033[1;32m'
+NC='\033[0m'
+
+if [[ -z ${PREFIX} || ${PREFIX} == "$HOME/.wineprefix" ]]; then
+	printf "${RED}Error${NC}: No name specified for this prefix!\n\n"
+	
+	printf "Name your prefix: " && read -p '' input
+	if [ -z ${input} ]; then
+		exit 1;
+	fi
+	WINEPREFIX=$HOME/.wineprefix/${input}
+fi
+
+if [[ -n ${PREFIX} && -d "$WINEPREFIX" && ! -L "$WINEPREFIX" ]]; then
+	printf "${CYAN}Info${NC}: This prefix already exists..."
+	while true; do
+		printf "Do you wish to configure it? [${GREEN}Y${NC}/n] " && read -p '' input
+		case $input in
+			[Yy]*) WINEPREFIX=$WINEPREFIX winecfg; break;;
+			[Nn]*) exit;;
+			    *) WINEPREFIX=$WINEPREFIX winecfg; break;;
+		esac
+	done
+	exit 1
+fi	
+
+WINEARCH=${ARCH} WINEPREFIX=${WINEPREFIX} winecfg
+
+while true; do
+	printf "${CYAN}Info${NC}: Do you wish to install additional components in this prefix? [${GREEN}Y${NC}/n] " && read -p '' input
+	case $input in
+		[Yy]*) WINEPREFIX=$WINEPREFIX winetricks; break;;
+		[Nn]*) break;;
+	esac
+done
+

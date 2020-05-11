@@ -1,0 +1,6 @@
+2020/05/11-16:53:44.927 3d8c Reusing MANIFEST /home/nuno/.config/BraveSoftware/Brave-Browser/Default/Local Storage/leveldb/MANIFEST-000001
+2020/05/11-16:53:44.927 3d8c Recovering log #4
+2020/05/11-16:53:44.930 3d8c Reusing old log /home/nuno/.config/BraveSoftware/Brave-Browser/Default/Local Storage/leveldb/000004.log 
+2020/05/11-20:32:40.139 b9991 Level-0 table #8: started
+2020/05/11-20:32:40.143 b9991 Level-0 table #8: 18166 bytes OK
+2020/05/11-20:32:40.145 b9991 Delete type=0 #4

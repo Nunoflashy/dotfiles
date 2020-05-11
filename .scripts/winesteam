@@ -1,0 +1,12 @@
+#!/bin/bash
+
+export WINEPREFIX=~/Downloads/DXVK/_DXVK_prefix
+#export WINEDIR=~/Downloads/DXVK/wine-staging/bin
+export WINEDIR=/var/local/wine-staging-3.4/bin
+
+#Vulkan 
+export DXVK_DEBUG_LAYERS=0
+export DXVK_HUD=devinfo,fps
+
+#Start Steam
+${WINEDIR}/wine "${WINEPREFIX}/drive_c/Program Files (x86)/Steam/Steam.exe" -no-cef-sandbox

@@ -1,0 +1,51 @@
+#!/bin/sh
+
+bluetooth_connected="$(bluetoothctl show)"
+bluetooth_powered="$(bluetoothctl show | grep Powered | awk '{print $2}')"
+
+function show_icon_active {
+	echo ""
+	echo ""
+	echo \#3d87ff
+}
+
+function show_icon_inactive {
+	echo ""
+	echo ""
+	echo \#d6d6d6
+}
+
+function toggle {
+	[[ "$bluetooth_powered" = "yes" ]] && "$(bluetoothctl power off)" || \
+	[[ "$bluetooth_powered" = "no" ]] && "$(bluetoothctl power on)"
+}
+
+function display_info {
+	dunstify -u low "Bluetooth" "$bluetooth_connected"
+}
+
+case $BLOCK_BUTTON in
+	1)
+		[[ "$bluetooth_powered" = "yes" ]] && "$(bluetoothctl power off)" || \
+		[[ "$bluetooth_powered" = "no" ]] && "$(bluetoothctl power on)";;
+	3)
+		display_info;;
+		
+esac
+
+# Check if the device is connected
+if [[ "$bluetooth_connected" != "No default controller available" ]]; then
+	# Check if the device is powered on
+	if [[ "$bluetooth_powered" = "yes" ]]; then
+		show_icon_active
+		
+		exit 0
+	fi
+	show_icon_inactive
+	
+	exit 0
+fi
+
+exit 33;
+
+

@@ -1,0 +1,23 @@
+[global_config]
+  borderless = True
+[keybindings]
+  split_horiz = <Primary><Shift>Right
+  split_vert = <Primary><Shift>Up
+[profiles]
+  [[default]]
+    allow_bold = False
+    background_darkness = 0.8
+    background_type = transparent
+    cursor_shape = underline
+    cursor_color = "#aaaaaa"
+    foreground_color = "#ffffff"
+    show_titlebar = False
+[layouts]
+  [[default]]
+    [[[window0]]]
+      type = Window
+      parent = ""
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+[plugins]

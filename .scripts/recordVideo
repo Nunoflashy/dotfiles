@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# Get the window name
+WM_CLASS=$(xprop -id $(xdotool getwindowfocus) | grep WM_CLASS | awk '{print $4}')
+
+# Get the window's instance name
+WM_NAME=$(xdotool getwindowfocus getwindowname)
+
+# Parse it in a readable format
+instanceName=${WM_NAME//'/'/'_'}
+className=${WM_CLASS//'"'}
+
+
+# Below are the list of programs that should use the internal instanceName
+if [[ $className = "Wine" ]]; then
+	className=$instanceName
+fi
+
+if [[ -z $className || -z $instanceName ]]; then
+	instanceName="Desktop"
+	className="Desktop"
+fi
+
+if [[ ! -d "$HOME/Videos/$className" ]]; then
+	mkdir "$HOME/Videos/$className"
+fi
+
+
+function record() {
+	# Signal i3blocks to update
+	echo "⏺ REC" > /tmp/video-recording.record && pkill -RTMIN+2 i3blocks
+	
+	POSITION="$(xrandr | grep primary | awk '{print $4}' | cut -c11-)"
+	RESOLUTION="$(xrandr | grep primary | awk '{print $4}' | cut -d"+" -f1)"
+	FPS=60
+	
+	ffmpeg -y \
+	-video_size $RESOLUTION \
+	-framerate $FPS \
+	-f x11grab \
+	-i :0.0+$POSITION \
+	-c:v h264_nvenc \
+	-b:v 50M \
+	-preset slow \
+	"$HOME/Videos/$className/$instanceName $(date +"%d-%m-%Y - %T").mkv"
+}
+
+function kill() {
+	pkill -SIGINT ffmpeg
+	echo "" > /tmp/video-recording.record && pkill -RTMIN+2 i3blocks
+}
+
+if [[ -z $(pidof ffmpeg) ]]; then
+	record
+#else
+#	kill
+fi

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Retrieve the current keyboard layout in a way that is easily parsable
+layout=$(setxkbmap -query | grep layout | awk '{print $2}')
+
+setxkbmap -layout pt,us -option grp:win_space_toggle
+
+notify-send "Layout Changed" "Keyboard Layout Changed to $layout"

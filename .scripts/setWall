@@ -1,0 +1,3 @@
+#!/bin/sh
+
+xwallpaper --output Virtual-1 --stretch ~/Images/wall.jpg

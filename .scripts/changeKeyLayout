@@ -1,0 +1,27 @@
+#!/bin/bash
+
+setxkbmap pt
+
+while test $# -gt 0; do
+	case "$1" in
+		-bracketright)
+			xdotool key dead_acute
+			break
+			;;
+		-bracketleft)
+			xdotool key dead_grave
+			break
+			;;
+		-backslash)
+			xdotool key dead_tilde
+			break
+			;;
+		-semicolon)
+			xdotool key ccedilla
+			break
+			;;
+	esac
+done
+
+sleep .02
+setxkbmap us

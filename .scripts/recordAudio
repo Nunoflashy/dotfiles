@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Get the window name
+WM_CLASS=$(xprop -id $(xdotool getwindowfocus) | grep WM_CLASS | awk '{print $4}')
+
+# Get the window's instance name
+WM_NAME=$(xdotool getwindowfocus getwindowname)
+
+# Parse it in a readable format
+instanceName=${WM_NAME//'/'/'_'}
+className=${WM_CLASS//'"'}
+
+
+# Below are the list of programs that should use the instance name
+# E.g: an application running in WINE will not display Wine, but its real name
+if [[ $className = "Wine" ]]; then
+	className=$instanceName
+fi
+
+if [[ ! -d "$HOME/Videos/$className" ]]; then
+	mkdir "$HOME/Videos/$className"
+fi
+
+
+function record() {
+	# Signal i3blocks to update
+#	echo "⏺ AUDIO" > /tmp/audio-recording.record && pkill -RTMIN+3 i3blocks
+	
+	ffmpeg -y \
+	-f pulse \
+	-i default \
+	-c:a flac \
+	"$HOME/Videos/$className/$instanceName $(date +"%d-%m-%Y - %T").flac"
+}
+
+function kill() {
+	pkill -SIGINT ffmpeg
+#	echo "" > /tmp/audio-recording.record && pkill -RTMIN+3 i3blocks
+}
+
+if [[ -z $(pidof ffmpeg) ]]; then
+	record
+#else
+#	kill
+fi

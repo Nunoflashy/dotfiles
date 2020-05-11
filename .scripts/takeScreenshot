@@ -1,0 +1,34 @@
+#!/bin/bash
+
+ActiveWindow=$(xdotool getwindowfocus getwindowname)
+
+# The list of programs to use the unique screenshot behaviour (Must be the class name)
+Programs=(CABAL)
+
+
+function take_normal {
+	for program in "${Programs[@]}"; do
+		if [[ "$ActiveWindow" = "$program" && -f "$SCRIPTS/screenshot/$program" ]]; then
+			source "$SCRIPTS/screenshot/$program"
+		else
+			scrot -q 100 Screenshot_%d-%m-%Y_%T.jpg -e 'mv $f ~/Pictures'
+		fi
+	done
+}
+
+function take_selection {
+	scrot -s -q 100 Screenshot_%d-%m-%Y_%T.jpg -e 'mv $f ~/Pictures'
+}
+
+while test $# -gt 0; do
+	case "$1" in 
+		--normal)
+			take_normal
+			break
+			;;
+		--selection)
+			take_selection
+			break
+			;;
+	esac
+done

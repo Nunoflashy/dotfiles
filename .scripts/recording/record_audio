@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# WM_CLASS added due to compatibility issues with parsing forward slashes
+# in the string, now it will be used for everything unless a rule is specified below.
+
+WM_CLASS=$(xprop -id $(xdotool getwindowfocus) | grep WM_CLASS | awk '{print $4}')
+WM_NAME="$(xdotool getwindowfocus getwindowname)"
+
+name=${WM_NAME//'/'/'_'}
+program=${WM_CLASS//'"'}
+
+# Get the internal program name if it's running under WINE.
+if [[ $program = "Wine" ]]; then
+	program=$name
+fi
+
+function start {
+	ffmpeg -y \
+	-f pulse \
+	-i default \
+	-c:a flac \
+	"$HOME/Videos/$program/$name $(date +"%d-%m-%Y - %T")".flac
+}
+
+function stop {
+	[[ -n "$(pidof ffmpeg)" ]] && pkill -SIGINT ffmpeg && exit 0
+}
+
+if [[ -z "$(pidof ffmpeg)" ]]; then
+	
+	# I had a check here to detect whether or not the
+	# directory was already created, but it gave me problems
+	# with some windows, inverting the logic and not creating
+	# the directory if it did not exist.
+	mkdir "$HOME/Videos/$program"
+	
+	start
+else
+	stop
+fi

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+isPlaying="$(deadbeef --nowplaying-tf "%isplaying%")"
+isPaused="$(deadbeef --nowplaying-tf "%ispaused%")"
+getTitle="$(deadbeef --nowplaying-tf "$get %title%")"
+play=""
+pause=""
+
+# If it's not playing and is paused
+if [[ -z "$isPlaying" ]]; then
+	if [[ -n "$isPaused" ]]; then
+		echo "$play"
+		echo "$play"
+	fi
+else
+# It's playing, so print the pause button and resume playback
+	printf "$pause";
+fi
+
+case $BLOCK_BUTTON in
+	1)
+		deadbeef --toggle-pause;;
+		#pkill -RTMIN+1 i3blocks;; #Signal i3blocks to activate script
+esac
